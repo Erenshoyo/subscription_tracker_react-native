@@ -15,12 +15,14 @@ import dayjs from "dayjs";
 import { styled } from "nativewind";
 import { useState } from "react";
 import { FlatList, Image, Text, View } from "react-native";
+import { usePostHog } from "posthog-react-native";
 
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 const SafeAreaView = styled(RNSafeAreaView);
 
 export default function App() {
   const { user } = useUser();
+  const posthog = usePostHog();
   const [expandedSubscriptionId, setExpandedSubscriptionId] = useState<
     string | null
   >(null);
@@ -91,11 +93,25 @@ export default function App() {
           <SubscriptionCard
             {...item}
             expanded={expandedSubscriptionId === item.id}
-            onPress={() =>
+            onPress={() => {
+              const isCurrentlyExpanded = expandedSubscriptionId === item.id;
+              if (isCurrentlyExpanded) {
+                posthog.capture("subscription_collapsed", {
+                  subscription_name: item.name,
+                  subscription_id: item.id,
+                });
+              } else {
+                posthog.capture("subscription_expanded", {
+                  subscription_name: item.name,
+                  subscription_id: item.id,
+                  billing: item.billing,
+                  category: item.category,
+                });
+              }
               setExpandedSubscriptionId((currentId) =>
                 currentId === item.id ? null : item.id,
-              )
-            }
+              );
+            }}
           />
         )}
         extraData={expandedSubscriptionId}
