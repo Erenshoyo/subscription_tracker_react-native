@@ -3,6 +3,7 @@ import {
   formatStatusLabel,
   formatSubscriptionDateTime,
 } from "@/assets/lib/utils";
+// eslint-disable-next-line import/no-named-as-default
 import clsx from "clsx";
 import React from "react";
 import { Image, Pressable, Text, View } from "react-native";

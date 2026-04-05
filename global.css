@@ -275,43 +275,46 @@
   }
 
   .auth-content {
-    @apply grow px-5 pb-10 pt-8;
+    @apply grow px-5 pb-10 pt-10;
   }
 
+  /* Brand block — logo mark + wordmark row */
   .auth-brand-block {
-    @apply mt-2 items-center;
+    @apply mb-10 items-center;
   }
 
   .auth-logo-wrap {
-    @apply mb-7 flex-row items-center gap-3;
+    @apply mb-8 flex-row items-center gap-3;
   }
 
   .auth-logo-mark {
-    @apply relative size-14 items-center justify-center rounded-2xl bg-accent;
+    @apply size-14 items-center justify-center rounded-2xl bg-accent;
   }
 
   .auth-logo-mark-text {
-    @apply text-2xl font-sans-extrabold text-background;
+    @apply text-3xl font-sans-extrabold text-white;
   }
 
   .auth-wordmark {
-    @apply text-3xl font-sans-extrabold text-primary;
+    @apply text-2xl font-sans-extrabold text-primary;
   }
 
   .auth-wordmark-sub {
-    @apply -mt-1 text-xs font-sans-semibold uppercase tracking-[1px] text-muted-foreground;
+    @apply text-[11px] font-sans-semibold uppercase tracking-[2px] text-muted-foreground;
   }
 
+  /* Heading + sub text below the logo row */
   .auth-title {
-    @apply text-3xl font-sans-bold text-primary;
+    @apply text-[32px] font-sans-bold text-primary;
   }
 
   .auth-subtitle {
-    @apply mt-2 max-w-[320px] text-center text-base font-sans-medium text-muted-foreground;
+    @apply mt-2 max-w-[300px] text-center text-base font-sans-medium text-muted-foreground;
   }
 
+  /* Card wrapping the form */
   .auth-card {
-    @apply mt-8 rounded-3xl border border-border bg-card p-5;
+    @apply rounded-3xl border border-border bg-card p-5;
   }
 
   .auth-form {
@@ -319,7 +322,7 @@
   }
 
   .auth-field {
-    @apply gap-2;
+    @apply gap-1.5;
   }
 
   .auth-label {
@@ -342,8 +345,9 @@
     @apply text-sm font-sans-medium text-muted-foreground;
   }
 
+  /* Primary CTA — full-width orange pill */
   .auth-button {
-    @apply mt-1 items-center rounded-2xl bg-accent py-4;
+    @apply mt-2 items-center rounded-full bg-accent py-4;
   }
 
   .auth-button-disabled {
@@ -351,7 +355,7 @@
   }
 
   .auth-button-text {
-    @apply text-base font-sans-bold text-primary;
+    @apply text-base font-sans-bold text-white;
   }
 
   .auth-secondary-button {
@@ -374,8 +378,9 @@
     @apply text-[11px] font-sans-semibold uppercase tracking-[1px] text-muted-foreground;
   }
 
+  /* "New to Recurly? Create an account" row inside the card */
   .auth-link-row {
-    @apply mt-5 flex-row items-center justify-center gap-1;
+    @apply mt-2 flex-row items-center justify-center gap-1;
   }
 
   .auth-link-copy {
@@ -383,7 +388,7 @@
   }
 
   .auth-link {
-    @apply text-sm font-sans-bold text-accent;
+    @apply text-sm font-sans-semibold text-accent;
   }
 
   .modal-overlay {
