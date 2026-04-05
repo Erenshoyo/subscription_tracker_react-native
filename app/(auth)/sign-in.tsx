@@ -31,8 +31,9 @@ export default function SignInScreen() {
 
       if (signIn.status === "complete") {
         await signIn.finalize({
-          navigate: ({ session, decorateUrl }: any) => {
+          navigate: ({ session }: any) => {
             if (session?.currentTask) {
+              router.replace(`/${session.currentTask.key}` as any);
               return;
             }
             router.replace("/(tabs)");
@@ -54,7 +55,10 @@ export default function SignInScreen() {
       if (signIn.status === "complete") {
         await signIn.finalize({
           navigate: ({ session }: any) => {
-            if (session?.currentTask) return;
+            if (session?.currentTask) {
+              router.replace(`/${session.currentTask.key}` as any);
+              return;
+            }
             router.replace("/(tabs)");
           },
         });
@@ -67,7 +71,7 @@ export default function SignInScreen() {
   if (signIn?.status === "needs_client_trust") {
     return (
       <SafeAreaView className="auth-safe-area">
-        <ScrollView className="auth-scroll" contentContainerClassName="grow" automaticallyAdjustKeyboardInsets>
+        <ScrollView className="auth-scroll" contentContainerClassName="grow" automaticallyAdjustKeyboardInsets keyboardShouldPersistTaps="handled">
           <View className="auth-content justify-center">
             <View className="auth-brand-block">
               <Text className="auth-title">Verify your account</Text>
@@ -117,7 +121,7 @@ export default function SignInScreen() {
 
   return (
     <SafeAreaView className="auth-safe-area">
-      <ScrollView className="auth-scroll" contentContainerClassName="grow" automaticallyAdjustKeyboardInsets>
+      <ScrollView className="auth-scroll" contentContainerClassName="grow" automaticallyAdjustKeyboardInsets keyboardShouldPersistTaps="handled">
         <View className="auth-content justify-center">
           <View className="auth-brand-block">
             <View className="auth-logo-wrap">

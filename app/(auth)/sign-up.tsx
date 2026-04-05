@@ -43,7 +43,10 @@ export default function SignUpScreen() {
       if (signUp.status === "complete") {
         await signUp.finalize({
           navigate: ({ session }: any) => {
-            if (session?.currentTask) return;
+            if (session?.currentTask) {
+              router.replace(`/${session.currentTask.key}` as any);
+              return;
+            }
             router.replace("/(tabs)");
           },
         });
@@ -58,7 +61,7 @@ export default function SignUpScreen() {
   if (signUp?.status === "missing_requirements" && signUp.unverifiedFields.includes("email_address")) {
     return (
       <SafeAreaView className="auth-safe-area">
-        <ScrollView className="auth-scroll" contentContainerClassName="grow" automaticallyAdjustKeyboardInsets>
+        <ScrollView className="auth-scroll" contentContainerClassName="grow" automaticallyAdjustKeyboardInsets keyboardShouldPersistTaps="handled">
           <View className="auth-content justify-center">
             <View className="auth-brand-block">
               <Text className="auth-title">Verify your email</Text>
@@ -102,7 +105,7 @@ export default function SignUpScreen() {
 
   return (
     <SafeAreaView className="auth-safe-area">
-      <ScrollView className="auth-scroll" contentContainerClassName="grow" automaticallyAdjustKeyboardInsets>
+      <ScrollView className="auth-scroll" contentContainerClassName="grow" automaticallyAdjustKeyboardInsets keyboardShouldPersistTaps="handled">
         <View className="auth-content justify-center">
           <View className="auth-brand-block">
             <View className="auth-logo-wrap">
