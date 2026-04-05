@@ -4,12 +4,14 @@ import React, { useState } from "react";
 import { Text, TextInput, View, Pressable, Alert, ScrollView } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 import { styled } from "nativewind";
+import { usePostHog } from "posthog-react-native";
 
 const SafeAreaView = styled(RNSafeAreaView);
 
 export default function SignUpScreen() {
   const { signUp, errors, fetchStatus } = useSignUp();
   const router = useRouter();
+  const posthog = usePostHog();
 
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
@@ -26,12 +28,21 @@ export default function SignUpScreen() {
 
       if (error) {
         Alert.alert("Sign Up Error", error.longMessage || "Failed to sign up.");
+        posthog.capture("user_sign_up_failed", {
+          email: emailAddress,
+          error_message: error.longMessage || "Failed to sign up.",
+        });
         return;
       }
 
       await signUp.verifications.sendEmailCode();
     } catch (err: any) {
-      Alert.alert("Error", err.errors?.[0]?.message || "Something went wrong");
+      const message = err.errors?.[0]?.message || "Something went wrong";
+      Alert.alert("Error", message);
+      posthog.capture("user_sign_up_failed", {
+        email: emailAddress,
+        error_message: message,
+      });
     }
   };
 
@@ -43,11 +54,16 @@ export default function SignUpScreen() {
       if (signUp.status === "complete") {
         await signUp.finalize({
           navigate: ({ session }: any) => {
+            posthog.identify(emailAddress, {
+              $set: { email: emailAddress },
+              $set_once: { sign_up_date: new Date().toISOString() },
+            });
+            posthog.capture("user_signed_up", { email: emailAddress });
             if (session?.currentTask) {
               router.replace(`/${session.currentTask.key}` as any);
               return;
             }
-            router.replace("/(tabs)");
+            router.replace("/");
           },
         });
       } else {

@@ -4,12 +4,14 @@ import React, { useState } from "react";
 import { Text, TextInput, View, Pressable, Alert, ScrollView } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 import { styled } from "nativewind";
+import { usePostHog } from "posthog-react-native";
 
 const SafeAreaView = styled(RNSafeAreaView);
 
 export default function SignInScreen() {
   const { signIn, errors, fetchStatus } = useSignIn();
   const router = useRouter();
+  const posthog = usePostHog();
 
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
@@ -26,24 +28,38 @@ export default function SignInScreen() {
 
       if (error) {
         Alert.alert("Sign In Error", error.longMessage || "Failed to sign in.");
+        posthog.capture("user_sign_in_failed", {
+          email: emailAddress,
+          error_message: error.longMessage || "Failed to sign in.",
+        });
         return;
       }
 
       if (signIn.status === "complete") {
         await signIn.finalize({
           navigate: ({ session }: any) => {
+            posthog.identify(emailAddress, {
+              $set: { email: emailAddress },
+              $set_once: { first_sign_in_date: new Date().toISOString() },
+            });
+            posthog.capture("user_signed_in", { email: emailAddress });
             if (session?.currentTask) {
               router.replace(`/${session.currentTask.key}` as any);
               return;
             }
-            router.replace("/(tabs)");
+            router.replace("/");
           },
         });
       } else if (signIn.status === "needs_client_trust") {
         await signIn.mfa.sendEmailCode();
       }
     } catch (err: any) {
-      Alert.alert("Error", err.errors?.[0]?.message || "Something went wrong");
+      const message = err.errors?.[0]?.message || "Something went wrong";
+      Alert.alert("Error", message);
+      posthog.capture("user_sign_in_failed", {
+        email: emailAddress,
+        error_message: message,
+      });
     }
   };
 
@@ -59,7 +75,7 @@ export default function SignInScreen() {
               router.replace(`/${session.currentTask.key}` as any);
               return;
             }
-            router.replace("/(tabs)");
+            router.replace("/");
           },
         });
       }
