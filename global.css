@@ -355,7 +355,7 @@
   }
 
   .auth-button-text {
-    @apply text-base font-sans-bold text-white;
+    @apply text-base font-sans-bold text-primary;
   }
 
   .auth-secondary-button {

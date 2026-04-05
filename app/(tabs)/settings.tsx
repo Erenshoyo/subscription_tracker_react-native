@@ -1,6 +1,6 @@
 import { Text, Pressable } from "react-native";
 import { useAuth } from "@clerk/expo";
-import { useRouter } from "expo-router";
+
 
 import { styled } from "nativewind";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
@@ -8,12 +8,11 @@ const SafeAreaView = styled(RNSafeAreaView);
 
 const Settings = () => {
   const { signOut } = useAuth();
-  const router = useRouter();
+
 
   const handleSignOut = async () => {
     try {
       await signOut();
-      router.replace("/(auth)/sign-in");
     } catch (err) {
       console.error("Sign out error", err);
     }
